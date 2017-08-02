@@ -45,8 +45,8 @@ casa_add_library( components
     ComponentModels/C11Timer.cc
     ComponentModels/TabularSpectrum.cc
     ComponentModels/TwoSidedShape.cc
-    
-    
+
+
     SpectralComponents/CompiledSpectralElement.cc
     SpectralComponents/GaussianMultipletSpectralElement.cc
     SpectralComponents/GaussianSpectralElement.cc
@@ -63,7 +63,7 @@ casa_add_library( components
     SpectralComponents/SpectralList.cc
     SpectralComponents/SpectralListFactory.cc
 )
-install (FILES 
+install (FILES
     ComponentModels/ComponentList.h
     ComponentModels/ComponentShape.h
     ComponentModels/ComponentType.h
@@ -95,7 +95,7 @@ install (FILES
     ComponentModels/TwoSidedShape.h
 	DESTINATION include/casacode/components/ComponentModels
 )
-install (FILES 
+install (FILES
     SpectralComponents/CompiledSpectralElement.h
     SpectralComponents/GaussianMultipletSpectralElement.h
     SpectralComponents/GaussianSpectralElement.h
@@ -144,6 +144,6 @@ casa_add_assay( components SpectralComponents/test/tProfileFit1D.cc )
 casa_add_assay( components SpectralComponents/test/tSpectralFit.cc )
 
 casa_add_unit_test( MODULES components SOURCES ComponentModels/test/tLimbDarkenedDiskShape.cc )
-casa_add_google_test( MODULES components SOURCES ComponentModels/test/FluxStandard_GTest.cc ComponentModels/test/FluxStandardTest.cc )
-casa_add_google_test( MODULES components SOURCES ComponentModels/test/EphemObjFluxStandard_GTest.cc ComponentModels/test/FluxStandardTest.cc )
-casa_add_google_test( MODULES components SOURCES ComponentModels/test/FluxStandard2_GTest.cc ComponentModels/test/FluxStandardTest.cc )
+# casa_add_google_test( MODULES components SOURCES ComponentModels/test/FluxStandard_GTest.cc ComponentModels/test/FluxStandardTest.cc )
+# casa_add_google_test( MODULES components SOURCES ComponentModels/test/EphemObjFluxStandard_GTest.cc ComponentModels/test/FluxStandardTest.cc )
+# casa_add_google_test( MODULES components SOURCES ComponentModels/test/FluxStandard2_GTest.cc ComponentModels/test/FluxStandardTest.cc )

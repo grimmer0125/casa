@@ -948,6 +948,7 @@ if( NOT SKIP_PGPLOT )
      endif()
   endif()
   casa_find( PGPLOT
+    NO_LINK
     VERSION 5.3.1
     PREFIX_HINTS ${PGPLOT_ROOT_DIR}
     INCLUDES cpgplot.h
@@ -958,6 +959,7 @@ endif()
 # WCSLIB
 if( NOT SKIP_PGPLOT )
   casa_find( WCSLIB
+NO_LINK
     VERSION 4.3
     PREFIX_HINTS ${WCSLIB_ROOT_DIR}
     INCLUDES wcslib/wcsconfig.h
@@ -974,6 +976,7 @@ if( NOT SKIP_PGPLOT )
     DEPENDS PGPLOT )
 else()
   casa_find( WCSLIB
+NO_LINK
     VERSION 4.3
     PREFIX_HINTS ${WCSLIB_ROOT_DIR}
     INCLUDES wcslib/wcsconfig.h
@@ -1053,6 +1056,7 @@ else()
 endif()
 
 casa_find( CASACORE
+NO_LINK
            VERSION 2.0.2
            PREFIX_HINTS ${CASACORE_ROOT_DIR} ${Boost_INCLUDE_DIR}
            DEFINITIONS "-DUseCasacoreNamespace"
@@ -1120,79 +1124,79 @@ if(CMAKE_SYSTEM_NAME STREQUAL Linux AND GSL_LIBRARIES)
 endif( )
 
 # Java
-casa_find( Java
-  VERSION 1.5
-  PROGRAMS java
-  PROG_VERSION "-version")
+# casa_find( Java
+#   VERSION 1.5
+#   PROGRAMS java
+#   PROG_VERSION "-version")
 
-if ( ${dbusxx} STREQUAL dbus-c++ )
-  # C++ DBus
-  #
-  # The header file dbus/dbus-arch-deps.h exists on some but not all systems, in a directory
-  # for itself
-  #
-  # Form all possible DBus prefixes and use them as hints to casa_find()
-  #
-  set( dbus_prefix "" )
-  foreach( _p ${CMAKE_INSTALL_PREFIX} ${casa_packages}  /sw /opt/local /usr/local /opt /usr )
-    foreach( _l lib lib64 )
-      list( APPEND dbus_prefix ${_p}/dbus-1.0 )
-      list( APPEND dbus_prefix ${_p}/${_l}/dbus-1.0 )
-      list( APPEND dbus_prefix ${_p}/${_l}/qt-4.3.4/dbus )
-      list( APPEND dbus_prefix ${_p}/${_l}/qt-4.3.4/dbus/${_l}/dbus-1.0 )
-    endforeach()
-  endforeach()
-  # Debian arch specific header location (64 bit only)
-  list( APPEND dbus_prefix /usr/lib/x86_64-linux-gnu/dbus-1.0)
-
-  casa_find( DBUSXX_ARCH
-    INCLUDES dbus/dbus-arch-deps.h
-    PREFIX_HINTS /usr/lib64/dbus-1.0 ${DBUS_ARCH_DIR} ${dbus_prefix}
-    NO_CHECK   # This header does not compile if included directly
-    NO_REQUIRE
-    IGNORE /usr/lib64/casapy
-  )
-  if( DBUSXX_ARCH_FOUND )
-    set( dbus_depends DBUSXX_ARCH )
-  endif()
-
-  casa_find( DBUSXX
-    INCLUDES dbus/dbus.h
-             dbus-c++/dbus.h
-    INCLUDES_SUFFIXES dbus-1.0 dbus-c++-1
-    PREFIX_HINTS ${DBUS_ROOT_DIR} ${dbus_prefix}
-    LIBS dbus-c++-1
-    PROGRAMS dbusxx-xml2cpp
-    DEPENDS ${dbus_depends}
-    IGNORE /usr/lib64/casapy
-  )
-  set( dbus-xml-2-cxx ${DBUSXX_dbusxx-xml2cpp_EXECUTABLE} )
-  set( DBUS_INCLUDE_DIRS ${DBUSXX_INCLUDE_DIRS} )
-  set( DBUS_LIBRARIES ${DBUSXX_LIBRARIES} )
-else( )
-  casa_find( DBUSPP_ARCH
-    INCLUDES dbus/dbus-arch-deps.h
-    PREFIX_HINTS ${DBUS_ARCH_DIR} ${casa_packages}/lib/dbus-1.0 ${dbus-arch-path-guess} /usr/lib64/dbus-1.0
-    NO_CHECK   # This header does not compile if included directly
-    NO_REQUIRE
-  )
-  if( DBUSPP_ARCH_FOUND )
-    set( dbus_depends DBUSPP_ARCH )
-  endif()
-
-  casa_find( DBUSPP
-    INCLUDES dbus/dbus.h
-             dbus-cpp/dbus.h
-    INCLUDES_SUFFIXES dbus-1.0 dbus-cpp
-    PREFIX_HINTS ${DBUS_ROOT_DIR} ${casa_packages}
-    LIBS ${dbus-cpp-library-name}
-    PROGRAMS dbuspp-xml2cpp
-    DEPENDS ${dbus_depends}
-  )
-  set( dbus-xml-2-cxx ${DBUSPP_dbuspp-xml2cpp_EXECUTABLE} )
-  set( DBUS_INCLUDE_DIRS ${DBUSPP_INCLUDE_DIRS} )
-  set( DBUS_LIBRARIES ${DBUSPP_LIBRARIES} )
-endif( )
+# if ( ${dbusxx} STREQUAL dbus-c++ )
+#   # C++ DBus
+#   #
+#   # The header file dbus/dbus-arch-deps.h exists on some but not all systems, in a directory
+#   # for itself
+#   #
+#   # Form all possible DBus prefixes and use them as hints to casa_find()
+#   #
+#   set( dbus_prefix "" )
+#   foreach( _p ${CMAKE_INSTALL_PREFIX} ${casa_packages}  /sw /opt/local /usr/local /opt /usr )
+#     foreach( _l lib lib64 )
+#       list( APPEND dbus_prefix ${_p}/dbus-1.0 )
+#       list( APPEND dbus_prefix ${_p}/${_l}/dbus-1.0 )
+#       list( APPEND dbus_prefix ${_p}/${_l}/qt-4.3.4/dbus )
+#       list( APPEND dbus_prefix ${_p}/${_l}/qt-4.3.4/dbus/${_l}/dbus-1.0 )
+#     endforeach()
+#   endforeach()
+#   # Debian arch specific header location (64 bit only)
+#   list( APPEND dbus_prefix /usr/lib/x86_64-linux-gnu/dbus-1.0)
+#
+#   casa_find( DBUSXX_ARCH
+#     INCLUDES dbus/dbus-arch-deps.h
+#     PREFIX_HINTS /usr/lib64/dbus-1.0 ${DBUS_ARCH_DIR} ${dbus_prefix}
+#     NO_CHECK   # This header does not compile if included directly
+#     NO_REQUIRE
+#     IGNORE /usr/lib64/casapy
+#   )
+#   if( DBUSXX_ARCH_FOUND )
+#     set( dbus_depends DBUSXX_ARCH )
+#   endif()
+#
+#   casa_find( DBUSXX
+#     INCLUDES dbus/dbus.h
+#              dbus-c++/dbus.h
+#     INCLUDES_SUFFIXES dbus-1.0 dbus-c++-1
+#     PREFIX_HINTS ${DBUS_ROOT_DIR} ${dbus_prefix}
+#     LIBS dbus-c++-1
+#     PROGRAMS dbusxx-xml2cpp
+#     DEPENDS ${dbus_depends}
+#     IGNORE /usr/lib64/casapy
+#   )
+#   set( dbus-xml-2-cxx ${DBUSXX_dbusxx-xml2cpp_EXECUTABLE} )
+#   set( DBUS_INCLUDE_DIRS ${DBUSXX_INCLUDE_DIRS} )
+#   set( DBUS_LIBRARIES ${DBUSXX_LIBRARIES} )
+# else( )
+#   casa_find( DBUSPP_ARCH
+#     INCLUDES dbus/dbus-arch-deps.h
+#     PREFIX_HINTS ${DBUS_ARCH_DIR} ${casa_packages}/lib/dbus-1.0 ${dbus-arch-path-guess} /usr/lib64/dbus-1.0
+#     NO_CHECK   # This header does not compile if included directly
+#     NO_REQUIRE
+#   )
+#   if( DBUSPP_ARCH_FOUND )
+#     set( dbus_depends DBUSPP_ARCH )
+#   endif()
+#
+#   casa_find( DBUSPP
+#     INCLUDES dbus/dbus.h
+#              dbus-cpp/dbus.h
+#     INCLUDES_SUFFIXES dbus-1.0 dbus-cpp
+#     PREFIX_HINTS ${DBUS_ROOT_DIR} ${casa_packages}
+#     LIBS ${dbus-cpp-library-name}
+#     PROGRAMS dbuspp-xml2cpp
+#     DEPENDS ${dbus_depends}
+#   )
+#   set( dbus-xml-2-cxx ${DBUSPP_dbuspp-xml2cpp_EXECUTABLE} )
+#   set( DBUS_INCLUDE_DIRS ${DBUSPP_INCLUDE_DIRS} )
+#   set( DBUS_LIBRARIES ${DBUSPP_LIBRARIES} )
+# endif( )
 
 ## ATM
 #casa_find( ATM
@@ -1257,15 +1261,15 @@ endif()
 if(CMAKE_SYSTEM_NAME STREQUAL Linux AND EXISTS /usr/lib64/libqwt.so.6 )
   find_package(
     Qt4 ${qt4-version}
-    COMPONENTS QtCore QtGui QtDBus QtXml QtUiTools QtSvg QtOpenGL)
+    COMPONENTS QtCore QtGui QtXml QtUiTools QtSvg QtOpenGL)
     set( QT_OPENGL ${QT_QTOPENGL_LIBRARY} )
 else( )
   find_package(
     Qt4 ${qt4-version}
-    COMPONENTS QtCore QtGui QtDBus QtXml QtUiTools QtSvg )
+    COMPONENTS QtCore QtGui QtXml QtUiTools QtSvg )
 endif( )
 if( NOT QT4_FOUND )
-  message( FATAL_ERROR "Qt4 could not be found. Please check!" )
+  # message( FATAL_ERROR "Qt4 could not be found. Please check!" )
 endif()
 
 set( QT4_INCLUDE_DIRS ${QT_INCLUDES} CACHE PATH "QT4 include directories" FORCE )
@@ -1285,23 +1289,23 @@ set( QT4_FOUND TRUE CACHE BOOL "Was QT4 found?" )
 
 
 # QWT (requires Qt)
-casa_find( QWT
-  VERSION 5.1.1
-  INCLUDES qwt_global.h
-  INCLUDES_SUFFIXES qwt qwt-qt4 qwt5
-  PREFIX_HINTS
-    ${QWT_ROOT_DIR}
-    ${casa_packages}/qwt-5.2.0
-    ${casa_packages}/qwt-5.2.1-svn
-    ${casa_packages}/qwt-5.2.3-svn
-    ${casa_packages}/libexec/qt4
-  LIBS qwt
-  CPP_VERSION QWT_VERSION_STR
-  DEPENDS QT4 )
-
-if (QWT_VERSION VERSION_EQUAL 6 OR QWT_VERSION VERSION_GREATER 6)
-    add_definitions( -DQWT6 )
-endif()
+# casa_find( QWT
+#   VERSION 5.1.1
+#   INCLUDES qwt_global.h
+#   INCLUDES_SUFFIXES qwt qwt-qt4 qwt5
+#   PREFIX_HINTS
+#     ${QWT_ROOT_DIR}
+#     ${casa_packages}/qwt-5.2.0
+#     ${casa_packages}/qwt-5.2.1-svn
+#     ${casa_packages}/qwt-5.2.3-svn
+#     ${casa_packages}/libexec/qt4
+#   LIBS qwt
+#   CPP_VERSION QWT_VERSION_STR
+#   DEPENDS QT4 )
+#
+# if (QWT_VERSION VERSION_EQUAL 6 OR QWT_VERSION VERSION_GREATER 6)
+#     add_definitions( -DQWT6 )
+# endif()
 
 # Xerces
 casa_find( XERCES
@@ -1331,14 +1335,14 @@ endif ( NOT SQLITE_FOUND )
 #
 # RPFITS (Fortran)
 #
-casa_find( RPFITS
-  VERSION 2.11
-  INCLUDES RPFITS.h
-  LIBS rpfits
-  #RUN_VERSION names_.rpfitsversion
-  PREFIX_HINTS ${RPFITS_ROOT_DIR}
-  DEPENDS FORTRAN
-)
+# casa_find( RPFITS
+#   VERSION 2.11
+#   INCLUDES RPFITS.h
+#   LIBS rpfits
+#   #RUN_VERSION names_.rpfitsversion
+#   PREFIX_HINTS ${RPFITS_ROOT_DIR}
+#   DEPENDS FORTRAN
+# )
 
 # Readline
 casa_find( READLINE
@@ -1378,7 +1382,7 @@ casa_find( LIBSAKURA
 #                         #
 ###########################
 
-include (GoogleTestInstall)
+# include (GoogleTestInstall)
 
 
 #########################
@@ -1400,43 +1404,43 @@ casa_config_end()
 
 # for linux RPM & binary distros libgraphics contains pgplot (linked in)...
 if( APPLE )
-  casa_add_module( graphics CASACORE PGPLOT WCSLIB Boost)
+  # casa_add_module( graphics CASACORE PGPLOT WCSLIB Boost)
 else()
   if( NOT SKIP_PGPLOT )
-    casa_add_module( graphics CASACORE PGPLOT X11 WCSLIB Boost)
+    # casa_add_module( graphics CASACORE PGPLOT X11 WCSLIB Boost)
   else()
-    casa_add_module( graphics CASACORE X11 WCSLIB Boost)
+    # casa_add_module( graphics CASACORE X11 WCSLIB Boost)
   endif()
 endif()
-casa_add_module( atmosphere )
+# casa_add_module( atmosphere )
 casa_add_module( stdcasa CASACORE Boost )
-casa_add_module( parallel CASACORE Boost )
-casa_add_module( casadbus CASACORE DBUS Boost)
-casa_add_module( casaqt CASACORE QT4 QWT XERCES graphics stdcasa Boost)
+# casa_add_module( parallel CASACORE Boost )
+# casa_add_module( casadbus CASACORE DBUS Boost)
+# casa_add_module( casaqt CASACORE QT4 QWT XERCES graphics stdcasa Boost)
 ###casa_add_module ( CasaDataObjects CASACORE)
 casa_add_module( components stdcasa CASACORE Boost GSL)
 casa_add_module( imageanalysis CASACORE components)
-casa_add_module( asdmstman CASACORE Boost )
-casa_add_module( msvis CASACORE Boost asdmstman ) # WarningsAsErrors)
-casa_add_module( mstransform CASACORE stdcasa imageanalysis msvis)
-casa_add_module( synthesis CASACORE atmosphere stdcasa casadbus asdmstman Boost SQLITE ${CASAMPI} imageanalysis msvis mstransform LIBSAKURA)
-casa_add_module( flagging CASACORE Boost stdcasa casadbus synthesis casaqt QT4 msvis mstransform)
-casa_add_module( spectrallines CASACORE imageanalysis Boost SQLITE)
-casa_add_module( guitools CASACORE QT4 QWT synthesis)
-casa_add_module( display CASACORE WCSLIB QT4 casaqt guitools synthesis imageanalysis Boost stdcasa casadbus spectrallines components)
-casa_add_module( plotms CASACORE QT4 casaqt synthesis Boost )
-casa_add_module( calanalysis CASACORE synthesis Boost)
-casa_add_module( alma CASACORE LIBXML2 LIBXSLT Boost synthesis msvis)
+# casa_add_module( asdmstman CASACORE Boost )
+# casa_add_module( msvis CASACORE Boost asdmstman ) # WarningsAsErrors)
+# casa_add_module( mstransform CASACORE stdcasa imageanalysis msvis)
+# casa_add_module( synthesis CASACORE atmosphere stdcasa casadbus asdmstman Boost SQLITE ${CASAMPI} imageanalysis msvis mstransform LIBSAKURA)
+# casa_add_module( flagging CASACORE Boost stdcasa casadbus synthesis casaqt QT4 msvis mstransform)
+# casa_add_module( spectrallines CASACORE imageanalysis Boost SQLITE)
+# casa_add_module( guitools CASACORE QT4 QWT synthesis)
+# casa_add_module( display CASACORE WCSLIB QT4 casaqt guitools synthesis imageanalysis Boost stdcasa casadbus spectrallines components)
+# casa_add_module( plotms CASACORE QT4 casaqt synthesis Boost )
+# casa_add_module( calanalysis CASACORE synthesis Boost)
+# casa_add_module( alma CASACORE LIBXML2 LIBXSLT Boost synthesis msvis)
 #casa_add_module( alma_v3 CASACORE LIBXML2 LIBXSLT Boost synthesis)
 #casa_add_module( oldalma CASACORE LIBXML2 Boost )
-casa_add_module( nrao CASACORE Boost)
-casa_add_module( atnf CASACORE Boost RPFITS)
-casa_add_module( miriad CASACORE Boost components)
-casa_add_module( casa_sakura CASACORE Boost LIBSAKURA)
-casa_add_module( singledishfiller CASACORE )
-casa_add_module( singledish CASACORE casa_sakura singledishfiller msvis mstransform)
-casa_add_module( bnmin1 Boost GSL GSLCBLAS CASACORE )
-casa_add_module( air_casawvr CASACORE bnmin1 Boost synthesis WCSLIB CFITSIO LAPACK )
+# casa_add_module( nrao CASACORE Boost)
+# casa_add_module( atnf CASACORE Boost RPFITS)
+# casa_add_module( miriad CASACORE Boost components)
+# casa_add_module( casa_sakura CASACORE Boost LIBSAKURA)
+# casa_add_module( singledishfiller CASACORE )
+# casa_add_module( singledish CASACORE casa_sakura singledishfiller msvis mstransform)
+# casa_add_module( bnmin1 Boost GSL GSLCBLAS CASACORE )
+# casa_add_module( air_casawvr CASACORE bnmin1 Boost synthesis WCSLIB CFITSIO LAPACK )
 
 if (UseCrashReporter AND NOT "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Intel")
    add_subdirectory( crash)

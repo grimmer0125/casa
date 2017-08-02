@@ -26,8 +26,8 @@
 # In CASA, it does not make sense to build without also installing
 # the build products. Therefore...
 #
-# Create a target which ensures that the install target is 
-# always run as part of all. 
+# Create a target which ensures that the install target is
+# always run as part of all.
 #
 # For this to work, all other targets must be added as dependencies
 # of this "inst" target. This is done in the macro's below using add_dependencies()
@@ -63,8 +63,8 @@ macro( casa_add_library module )
 
   # Create the target lib<module>, but set the output library
   # filename to lib<module>.<suffix> (which would have defaulted
-  # to liblib<module>.<suffix>). The target named <module> is the 
-  # umbrella target for all targets (libraries, executables, ...) 
+  # to liblib<module>.<suffix>). The target named <module> is the
+  # umbrella target for all targets (libraries, executables, ...)
   # in this subdirectory.
 
   add_library( lib${module} ${ARGN} )
@@ -133,31 +133,31 @@ endmacro()
 #     <module>_INCLUDE_DIRS
 #     <module>_DEFINITIONS
 #     <module>_LINK_TO
-# 
+#
 # Fixme: move qt4, dbus, alma special cases
 # to client code
 
 macro( casa_add_module module )
 
-  set (options WarningsAsErrors) 
+  set (options WarningsAsErrors)
   set (oneValueArgs ) # None
   set (multiValueArgs )
 
-  cmake_parse_arguments (casa_add_module "${options}" "${oneValueArgs}" 
+  cmake_parse_arguments (casa_add_module "${options}" "${oneValueArgs}"
                          "${multiValueArgs}" ${ARGN})
 
   set( _dependencies ${casa_add_module_UNPARSED_ARGUMENTS})
 
   # Internal target to update this module including dependencies,
   # then install this module, excluding dependencies
-  add_custom_target( 
+  add_custom_target(
     ${module}_install
-    COMMAND ${CMAKE_BUILD_TOOL} install 
+    COMMAND ${CMAKE_BUILD_TOOL} install
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${module}
     )
 
   # Target to update and install this module, excluding dependencies
-  add_custom_target( 
+  add_custom_target(
     ${module}_fast
     COMMAND ${CMAKE_BUILD_TOOL} install/fast
     WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/${module}
@@ -168,7 +168,7 @@ macro( casa_add_module module )
   add_custom_target( ${module} COMMENT "Updating ${module}..." )
   add_dependencies( ${module} ${module}_install )
 
-  # If WarningsAsErrors was specified, then add a compiler flag to treat 
+  # If WarningsAsErrors was specified, then add a compiler flag to treat
   # warnings as error for this module
 
   if ( casa_add_module_WarningsAsErrors )
@@ -195,8 +195,8 @@ macro( casa_add_module module )
         message( FATAL_ERROR "${_dep} is listed as dependency for ${module}, but both ${_dep}_INCLUDE_DIRS and ${_dep}_LIBRARIES are undefined!" )
       endif()
     endif()
-    
-    # INCLUDE_DIRS 
+
+    # INCLUDE_DIRS
     # Add each of the dependent's include dirs
     # to this module's include dirs
     # (if not already contained in _INCLUDE_DIRS)
@@ -206,14 +206,14 @@ macro( casa_add_module module )
 
     endforeach()
 
-    # DEFINITIONS 
+    # DEFINITIONS
     foreach( _def ${${_dep}_DEFINITIONS} )
 
       casa_append( ${module}_DEFINITIONS ${_def} )
 
     endforeach()
 
-    # LINK_TO 
+    # LINK_TO
     # Unlike include dirs, libraries do not have
     # to be transitively propagated.
     # E.g. if A links to (depends on) B and B links to C
@@ -225,7 +225,7 @@ macro( casa_add_module module )
 
       # External library
 
-      set( ${module}_LINK_TO 
+      set( ${module}_LINK_TO
         ${${module}_LINK_TO}
         ${${_dep}_LIBRARIES} )
 
@@ -233,8 +233,8 @@ macro( casa_add_module module )
       # Another CASA module
 
       set(
-        ${module}_LINK_TO 
-        ${${module}_LINK_TO} 
+        ${module}_LINK_TO
+        ${${module}_LINK_TO}
         lib${_dep} )
 
       add_dependencies( ${module} ${_dep}_install )
@@ -244,8 +244,8 @@ macro( casa_add_module module )
     # Generated code need build dir in include path
     if( ${_dep} STREQUAL "DBUS" OR
         ${_dep} STREQUAL "QT4" )
-      
-      set( ${module}_INCLUDE_DIRS 
+
+      set( ${module}_INCLUDE_DIRS
         ${${module}_INCLUDE_DIRS}
         ${CMAKE_BINARY_DIR} )
 
@@ -256,7 +256,7 @@ macro( casa_add_module module )
         ${module} STREQUAL "oldalma" OR
 	${module} STREQUAL "alma_v3")
 
-      set( ${module}_INCLUDE_DIRS 
+      set( ${module}_INCLUDE_DIRS
         ${${module}_INCLUDE_DIRS}
         ${CMAKE_SOURCE_DIR}/${module}/ASDM
         ${CMAKE_SOURCE_DIR}/${module}/ASDMBinaries
@@ -281,7 +281,7 @@ endmacro()
 #
 # casa_add_python( module
 #                  target_name
-#                  installation_directory 
+#                  installation_directory
 #                  source1 [source2 ...]
 #                )
 #
@@ -302,7 +302,7 @@ endmacro()
 #
 #   casa_add_pymodule( module name source1 [source2 ...] )
 #
-# Creates a python module. 
+# Creates a python module.
 # The module is always linked to libxmlcasa and ${xmlcasa_LINK_TO}.
 #
 
@@ -358,13 +358,13 @@ endmacro()
 #
 macro( casa_add_check_module)
 
-    set (options ) 
+    set (options )
     set (oneValueArgs TEST) # None
     set (multiValueArgs MODULES)
 
-    cmake_parse_arguments (casa_add_check "${options}" "${oneValueArgs}" 
+    cmake_parse_arguments (casa_add_check "${options}" "${oneValueArgs}"
                            "${multiValueArgs}" ${ARGN})
-  
+
     set (modules ${casa_add_check_MODULES})
     set (test ${casa_add_check_TEST})
 
@@ -412,9 +412,9 @@ endmacro ()
 
 #
 # casa_add_unit_test( MODULES module [submodule [subsubmodule]  ...]
-#                     SOURCES source ... 
-#                     [LIBRARIES library1 [library2] ...] 
-#                     [INCLUDE_DIRS dir1 [dir2] ...] 
+#                     SOURCES source ...
+#                     [LIBRARIES library1 [library2] ...]
+#                     [INCLUDE_DIRS dir1 [dir2] ...]
 #                     [NOT_READY])
 #
 #      Add a unit test. The name of the test will be the basename of
@@ -425,19 +425,19 @@ endmacro ()
 #      build and test process (usually used for legacy unit tests awaiting
 #      vetting).
 #
-# Example: 
+# Example:
 #
 # casa_add_unit_test (msvis VisibilityIterator_Test.cc)
 #
 macro( casa_add_unit_test)
 
-  set (options NOT_READY COMMIT_ONLY) 
+  set (options NOT_READY COMMIT_ONLY)
   set (oneValueArgs) # None
   set (multiValueArgs LIBRARIES COMMAND_ARGUMENTS INCLUDE_DIRS SOURCES MODULES) # None
 
-  cmake_parse_arguments (casa_unit_test "${options}" "${oneValueArgs}" 
+  cmake_parse_arguments (casa_unit_test "${options}" "${oneValueArgs}"
                          "${multiValueArgs}" ${ARGN})
-  
+
   list (GET casa_unit_test_SOURCES 0 firstSource)
   get_filename_component( testName ${firstSource} NAME_WE )
   get_filename_component(path ${firstSource} PATH)
@@ -468,7 +468,7 @@ macro( casa_add_unit_test)
       set_property (TARGET ${testName} APPEND PROPERTY COMPILE_FLAGS "-Werror")
     endif ()
   endif ()
-  
+
   # add_executable( ${testName} EXCLUDE_FROM_ALL ${sources} ) # not part of main build
   # target_link_libraries( ${testName} lib${module} ${casa_unit_test_LIBRARIES})
 
@@ -487,8 +487,8 @@ macro( casa_add_unit_test)
 
     # This unit test is ready for normal use.  Add it as a runnable unit test both
     # globally and within its module.
-    
-    add_test( ${testName} ${CASA_assay} ${CMAKE_CURRENT_BINARY_DIR}/${testName} 
+
+    add_test( ${testName} ${CASA_assay} ${CMAKE_CURRENT_BINARY_DIR}/${testName}
               ${casa_unit_test_COMMAND_ARGUMENTS})
 
     add_dependencies( unit_test ${testName} )
@@ -510,15 +510,15 @@ macro( casa_add_unit_test)
     message ("WARNING Unit test ${firstSource} not ready for normal unit test usage.")
 
     if (NOT TARGET unit_test_unready) # create the unit_test_unready target if it doesn't exist
- 
+
        add_custom_target (unit_test_unready)
-    
+
     endif (NOT TARGET unit_test_unready)
 
     if (NOT TARGET unit_test_unready_${module}) # create unit_test_unready_MODULE if needed
 
        add_custom_target (unit_test_unready_${module})
-    
+
     endif (NOT TARGET unit_test_unready_${module})
 
     # Add the test so that unit_test_unready and unit_test_unready_MODULE targets will depend on it.
@@ -533,13 +533,13 @@ macro( casa_add_unit_test)
 endmacro()
 
 # casa_add_google_test (MODULES module [submodule [subsubmodule] ...] SOURCES source1 [source2] ... [LIB library1 [library2] ...])
-# 
+#
 # Adds a google-test unit test to the module.
 #
 # module - The name of the module (e.g., msvis, synthesis, etc.); the module is used to name the
 #          library containing the module (e.g., libmsvis, libsynthesis)
 #
-# sources - The source files that make up the test.  
+# sources - The source files that make up the test.
 #           The first source file is taken as the name of
 #           the test executable (e.g., msvis/MSVis/MyTest.cc -->
 #           executable MyTest).  Paths of the source files are usually
@@ -561,43 +561,7 @@ endmacro()
 #             code/install/assay script.  # # An XML file testName.xml
 #             will be produced when the test is run.  # macro
 #             (casa_add_google_test)
-macro (casa_add_google_test)
 
-    # Parse the arguments
-
-    set (options NOT_ON_APPLE)
-    set (oneValueArgs ) 
-    set (multiValueArgs SOURCES LIBS MODULES) # the lists of source files and libraries
-    cmake_parse_arguments (google_test "${options}" "${oneValueArgs}"
-                           "${multiValueArgs}"  ${ARGN})
-
-    list(GET google_test_SOURCES 0 testName)
-    get_filename_component (testName ${testName} NAME_WE)
-
-    if (DEFINED APPLE AND ${google_test_NOT_ON_APPLE})
-
-        message ("WARNING:: Test ${testName} disabled on Apple platform.")
-
-    else ()
-
-        # The Google Test install logic in cmake will put the needed include and library
-        # below the directory stored in the variable GtestRoot.
-
-        set (gtestIncludeDirectory ${GoogleTest_ReleaseRoot}/include)
-        set (gtestLibrary ${GoogleTest_LibraryDir}/libgtest.a)
-
-        set (libraries ${gtestLibrary})
-        list (APPEND gtestLibrary ${google_test_LIBS})
-
-        casa_add_unit_test (MODULES ${google_test_MODULES} SOURCES ${google_test_SOURCES} 
-                            LIBRARIES ${libraries} # gtest + provide libs
-                            INCLUDE_DIRS ${gtestIncludeDirectory}) # gtest include dirs
-
-        add_dependencies (${CasaTestName} ${GoogleTest_Target})
-
-    endif ()
-
-endmacro ()
 
 # casa_add_demo (module sourceFile1 [sourceFile2 ...])
 #
@@ -606,7 +570,7 @@ endmacro ()
 # intended to serve as an example to other developers.
 #
 # The demo program will be built as part of the normal casa and module builds.
-# This will help reduce the incidence of bit-rot; however, since the application 
+# This will help reduce the incidence of bit-rot; however, since the application
 # will not be executed as part of any of CASA's automatic processes there is
 # some chance that the program could become unintentionally obsolete.
 #
